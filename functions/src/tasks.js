@@ -14,8 +14,6 @@ export function getAllTasks(req, res) {
         .catch(err => res.status(500).json({ error: err.message}));
 }
 
-
-
 export async function addTask(req, res) {
     const { task } = req.body;
     const newTask = { task, createdAt: FieldValue.serverTimestamp() }
@@ -26,8 +24,6 @@ export async function addTask(req, res) {
         .then( () => getAllTasks(req, res) )
         .catch(err => res.status(500).send({ error: err.message }));
 }
-
-
 
 export async function deleteTask(req, res) {
     const { taskId } = req.params;
@@ -40,15 +36,14 @@ export async function deleteTask(req, res) {
         .catch(err => res.status(500).send({ error: err.message }));
 }
 
-
 export async function updateTask(req, res) {
-    const {taskId} = req.params;
-    const {task} = req.body;
+    const { taskId } = req.params;
+    const { done } = req.body;
     const db = await getFirestoreInstance();
 
     db.collection('tasks')
         .doc(taskId)
-        .update( {task} )
+        .update({ done })
         .then( () => getAllTasks(req, res) )
         .catch(err => res.status(500).send({ error: err.message }));
 }
